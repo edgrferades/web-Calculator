@@ -16,10 +16,10 @@ const equalElement = document.querySelector('.equal');
 
 let dis1 = '';
 let dis2 = '';
-let tempDis = null; // tempDis = result in webC
+let haveDot = false;
+let result = null;
 let lastOperation = '';
 
-let haveDot = false;
 numberElement.forEach(number => {
     number.addEventListener('click', (event) => {
 
@@ -38,29 +38,129 @@ numberElement.forEach(number => {
 operationElement.forEach(operation => {
     operation.addEventListener('click', (event) => {
 
-        // To commence operations, there has to be a numerical value.
-        if (!dis2) return; // this means '!dis2 = NOT dis2' meaning if dis2 is not present, this foreach function will not work. // only if there is a presence of dis2, this code will work
+        if (!dis2) return; //if dis2 is empty meaning no numaric values added then operarions wont work
 
         haveDot = false // on click haveDot turns into 'false', so this eventListener lets us add a new dot once the operation is clicked 
 
-        // operationName stores the operation's values inside it
-        const operationName = event.target.innerText;
+        const operationName = event.target.innerText; // operationName stores the operation's values inside it
 
         if (dis1 && dis2 && lastOperation){
             mathOperation();
         } else {
-            result = parseFloat(dis2);
+            result = parseFloat(dis2);//on button click it turns the null value into a numaric value coming from the dis2 // makes clearVar() have a numaric value in dis1
         }
 
-        clearVar (operationName)
-
+        clearVar (operationName);
+        lastOperation = operationName; // on click 'lastOperation' will take the value of the clicked variable and do the operation in mathOperation()
     })
 });
 
-let clearVar = (name = '') => { //name is the operation eg: +, -;
-    dis1 += dis2 + ' ' + name + ' '; // dis1 stores the value of dis2 and name(operation)
-    display1Element.innerText = dis1;
-    display2Element.innerText = '';
+// this functions runs everytime the above loop is executed
+let clearVar = (name = '') => { //'name' is the operation eg: +, -;
+    dis1 += dis2 + ' ' + name + ' '; // Concatenate dis2 and name and stores it in dis1. //on click the 'name' takes the value of the current operant and puts it in the 'operationName'
+    display1Element.innerText = dis1; 
+
+    display2Element.innerText = ''; // Resetting the display2Element and dis2 to an empty string so new values can be entered
     dis2 = '';
+
     tempDisplayElement.innerText = result;
 }
+
+let mathOperation = () => {
+    if (lastOperation === '%'){
+        result = parseFloat(result) % parseFloat(dis2)
+    } else if (lastOperation === '/') {
+        result = parseFloat(result) / parseFloat(dis2)
+    } else if (lastOperation === 'X') {
+        result = parseFloat(result) * parseFloat(dis2)
+    } else if (lastOperation === '-') {
+        result = parseFloat(result) - parseFloat(dis2)
+    } else if (lastOperation === '+') {
+        result = parseFloat(result) + parseFloat(dis2)
+    }
+}
+
+equalElement.addEventListener('click', () => {
+    if (!dis1 || !dis2) return;
+
+    haveDot = false;
+    mathOperation();
+    clearVar();
+    display2Element.innerText = result;
+    tempDisplayElement.innerText = '';
+    dis2 = result;
+    // dis1 = ''; // commenting out because I wanna see my history
+})
+
+lastEntityClearElement.addEventListener('click', () => {
+    display2Element.innerText = '';
+    dis2 = '';
+})
+
+window.addEventListener('keydown', (event) => {
+    if (
+        event.key === '0' ||
+        event.key === '1' ||
+        event.key === '2' ||
+        event.key === '3' ||
+        event.key === '4' ||
+        event.key === '5' ||
+        event.key === '6' ||
+        event.key === '7' ||
+        event.key === '8' ||
+        event.key === '9' ||
+        event.key === '.'
+    ){
+        clickButtonEl(event.key);
+    } else if (
+        event.key === '%' ||
+        event.key === '/' ||
+        event.key === '-' ||
+        event.key === '+' 
+    ){
+        clickOperation(event.key);
+    }else if (
+        event.key === '*'
+    ){
+        clickOperation('X')
+    }else if (
+        event.key == 'Enter' || event.key === '='
+    ){
+        clickEqual();
+    }
+})
+
+let clickButtonEl = (key) => {
+    numberElement.forEach( (button) => {
+        if (button.innerText === key){
+            button.click();
+        }
+    })
+}
+
+let clickOperation = (key) => {
+    operationElement.forEach( (button) => {
+        if (button.innerText === key) {
+            button.click();
+        }
+    })
+}
+
+let clickEqual = () => {
+    equalElement.click()
+}
+
+
+
+
+
+
+// check on this not working:
+// } else if (
+//     event.key === '%' ||
+//     event.key === '/' ||
+//     event.key === '*' ||
+//     event.key === '-' ||
+//     event.key === '+' 
+// ){
+// whats the point of decalring empty variables first only?
