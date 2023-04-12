@@ -92,6 +92,13 @@ equalElement.addEventListener('click', () => {
     // dis1 = ''; // commenting out because I wanna see my history
 })
 
+allClearElement.addEventListener('click', () => {
+    display2Element.innerText = '';
+    dis2 = '';
+    display1Element.innerText = '';
+    dis1 = '';
+})
+
 lastEntityClearElement.addEventListener('click', () => {
     display2Element.innerText = '';
     dis2 = '';
@@ -129,7 +136,7 @@ window.addEventListener('keydown', (event) => {
         clickEqual();
     }
 })
-
+ 
 let clickButtonEl = (key) => {
     numberElement.forEach( (button) => {
         if (button.innerText === key){
